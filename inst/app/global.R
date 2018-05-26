@@ -1,0 +1,1 @@
+inndxrs::app_global()

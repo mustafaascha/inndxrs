@@ -1,0 +1,27 @@
+Package: inndxrs
+Title: A shiny template
+Version: 0.1
+Authors@R: person("Martin", "du Toit", email = "martin@innovise.co.za", role = c("aut", "cre"))
+Description: A template for prod-ready Shiny App.
+License: GPL-3
+Depends:
+    R (>= 3.5.0)
+Imports:
+    DT,
+    glue,
+    graphics,
+    shiny,
+    shinydashboard,
+    stats,
+    tidyverse,
+    here,
+    inndxr,
+    jsonlite
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
