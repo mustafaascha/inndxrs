@@ -8,28 +8,53 @@
 #'
 #' @return An `tdrActiveContext` object
 #' @export
-createTdrContext <- function(driver, serverurl, database, uid, pwd, port, configFile){
+createTdrContext <- function(configFile, svrname){
   azEnv <- new.env(parent = emptyenv())
-  azEnv <- as.azureTdrContext(azEnv)
+  azEnv <- as.tdrActiveContext(azEnv)
   list2env(
-    list(driver = "", serverurl = "", database = "", uid = "", pwd = "", port = 0),
+    list(servername = svrname, connected = FALSE, driver = "", serverurl = "", database = "", uid = "", pwd = "", port = 0, connection = NULL),
     envir = azEnv
   )
   if (!missing(configFile)) {
     config <- read.inndxrs.config(configFile)
     list2env(config, envir = azEnv)
-    tdrAuthenticate(azEnv)
-  } else {
-    if (!missing(driver)) azEnv$driver <- driver
-    if (!missing(serverurl)) azEnv$serverurl <- serverurl
-    if (!missing(database)) azEnv$database <- database
-    if (!missing(uid)) azEnv$uid <- uid
-    if (!missing(pwd)) azEnv$pwd <- pwd
-    if (!missing(port)) azEnv$port <- port
-    if (!missing(server) && !missing(database)) {
-      tdrAuthenticate(azEnv)
-    }
+    #tdrAuthenticate(azEnv)
   }
+
+  if(nrow(config$tdrservers) > 0){
+    servers <- tibble::as_tibble(config$tdrservers)
+    server <-  dplyr::filter(servers, servername ==  svrname)
+  }
+
+  if(nrow(server) == 1){
+    azEnv$driver <- server$driver
+    azEnv$serverurl <- server$serverurl
+    azEnv$database <- server$database
+    azEnv$uid <- server$uid
+    azEnv$pwd <- server$pwd
+    azEnv$port <- server$port
+
+    tdrauth <- tdrAuthenticate(azEnv)
+  }
+
+  if(tdrauth) {
+
+    tdrGetCompanies(azEnv)
+  }
+
+  # else {
+  #   if (!missing(driver)) azEnv$driver <- driver
+  #   if (!missing(serverurl)) azEnv$serverurl <- serverurl
+  #   if (!missing(database)) azEnv$database <- database
+  #   if (!missing(uid)) azEnv$uid <- uid
+  #   if (!missing(pwd)) azEnv$pwd <- pwd
+  #   if (!missing(port)) azEnv$port <- port
+  #   if (!missing(server) && !missing(database)) {
+  #     tdrAuthenticate(azEnv)
+  #   }
+  # }
+
+
 
   return(azEnv)
 }
@@ -100,3 +125,4 @@ setTdrContext <- function(tdrActiveContext, driver, serverurl, database,
   # if (!missing(authType)) azureActiveContext$authType <- authType
   # if (!missing(resource)) azureActiveContext$resource <- resource
 }
+

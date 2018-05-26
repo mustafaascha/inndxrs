@@ -4,21 +4,9 @@
 \alias{createTdrContext}
 \title{Create an TDR Context.}
 \usage{
-createTdrContext(driver, serverurl, database, uid, pwd, port, configFile)
+createTdrContext(configFile, svrname)
 }
 \arguments{
-\item{driver}{The driver}
-
-\item{serverurl}{The serverurl}
-
-\item{database}{The TDR database}
-
-\item{uid}{Resource uid}
-
-\item{pwd}{The pwd}
-
-\item{port}{The port}
-
 \item{configFile}{location of file that contains configuration in JSON format. By default, this location is at `getOption("inndxrs.config")`}
 }
 \value{

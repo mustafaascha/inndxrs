@@ -23,8 +23,10 @@ is.tdrActiveContext <- function(x){
 #' @export
 print.tdrActiveContext <- function(x, ...){
   cat("inndxrs tdrActiveContext\n")
-  cat("TDR Server :", x$server, "\n")
+  cat("TDR Server Name :", x$servername, "\n")
+  cat("TDR Server URL :", x$serverurl, "\n")
   cat("TDR Database :", x$database, "\n")
+  cat("TDR Connected :", x$connected, "\n")
 }
 
 #' @export
@@ -36,3 +38,12 @@ str.tdrActiveContext <- function(object, ...){
 assertthat::on_failure(is.tdrActiveContext) <- function(call, env) {
   "Provide a valid tdrActiveContext. See createTdrContext()"
 }
+
+
+# is_connected <- function(x) {
+#   is.character(x) && length(x) == 1 && nchar(x) > 0
+# }
+#
+# on_failure(is_admin_user) <- function(call, env) {
+#   "Provide an adminUser"
+# }
