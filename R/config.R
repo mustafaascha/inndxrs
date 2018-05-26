@@ -4,9 +4,9 @@
 #' @export
 #
 read.inndxrs.config <- function(configFile = getOption("inndxrs.config")) {
-  assert_that(is.character(configFile))
-  assert_that(file.exists(configFile))
-  z <- tryCatch(fromJSON(file(configFile)),
+  assertthat::assert_that(is.character(configFile))
+  assertthat::assert_that(file.exists(configFile))
+  z <- tryCatch(jsonlite::fromJSON(file(configFile)),
                 error = function(e)e
   )
   # Error check the settings file for invalid JSON
@@ -17,6 +17,3 @@ read.inndxrs.config <- function(configFile = getOption("inndxrs.config")) {
   }
   z
 }
-
-
-

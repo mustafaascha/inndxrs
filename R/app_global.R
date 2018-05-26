@@ -7,7 +7,7 @@ app_global <- function() {
   run.mode <- "standalone"
   on.website <- FALSE
 
-  xwd <- here()
+  xwd <- here::here()
 
   if (on.website){
     wd <- "."
