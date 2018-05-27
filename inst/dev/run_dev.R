@@ -7,13 +7,16 @@ rm(list=ls(all.names = TRUE))
  devtools::document(".")
  devtools::load_all(".")
 
-# options(app.prod=FALSE) # TRUE = production mode, FALSE = development mode
-# shiny::runApp('inst/app')
+options(app.prod=FALSE) # TRUE = production mode, FALSE = development mode
+shiny::runApp('inst/app')
 
-ac <- createTdrContext(configFile = getOption("inndxrs.config"), svrname = "Azure")
-ac
 
-ac$companies
+ library(tidyverse)
+ ac <- createTdrContext(configFile = getOption("inndxrs.config"), svrname = "")
+ servers <- tibble::as_tibble(ac$tdrservers)
+ by_server <- servers %>% group_by(servername) %>% mutate(serverhead = servername) %>% nest()
+
+
 
 
 

@@ -1,48 +1,50 @@
 #' @import shiny
-#' @importFrom graphics hist
-#' @importFrom stats rnorm
+#' @import tidyverse
 #'
 app_global <- function() {
 
   run.mode <- "standalone"
-  on.website <- FALSE
+  # on.website <- FALSE
+  #
+  # xwd <- here::here()
+  #
+  # if (on.website){
+  #   wd <- "."
+  #   sapply(list.files(file.path(wd, "functions"), full.names=TRUE), source)
+  # } else {
+  #   #wd <- system.file("app", package = "inndxr")
+  #   wd <- file.path(xwd, "inst/app")
+  # }
+  #
+  # servers_file <- file.path(wd, "data/servers.RData")
+  # init_file <- file.path(wd, "data/init.server.RData")
+  #
+  # message(servers_file)
+  #
+  # if(file.exists(servers_file)){
+  #   load(file = servers_file)
+  #
+  #   by_server <- servers %>% group_by(servername) %>% mutate(serverhead = servername) %>% nest()
+  # } else {
+  #   #????
+  # }
+  #
+  # if(file.exists(init_file)){
+  #   load(file = init_file)
+  #   server <- init.server$server
+  # } else {
+  #   init.server <- NULL
+  #   #take the save bed, otherwise the connect will fail
+  #   server = "Azure"
+  # }
+  #
+  # init.server$servers <- list(servers)
+  #
+  # init.server <- inndxr:::upd_server(init.server, server = server)
 
-  xwd <- here::here()
-
-  if (on.website){
-    wd <- "."
-    sapply(list.files(file.path(wd, "functions"), full.names=TRUE), source)
-  } else {
-    #wd <- system.file("app", package = "inndxr")
-    wd <- file.path(xwd, "inst/app")
-  }
-
-  servers_file <- file.path(wd, "data/servers.RData")
-  init_file <- file.path(wd, "data/init.server.RData")
-
-  message(servers_file)
-
-  if(file.exists(servers_file)){
-    load(file = servers_file)
-
-    by_server <- servers %>% group_by(servername) %>% mutate(serverhead = servername) %>% nest()
-  } else {
-    #????
-  }
-
-  if(file.exists(init_file)){
-    load(file = init_file)
-    server <- init.server$server
-  } else {
-    init.server <- NULL
-    #take the save bed, otherwise the connect will fail
-    server = "Azure"
-  }
-
-  init.server$servers <- list(servers)
-
-  init.server <- inndxr:::upd_server(init.server, server = server)
-
+  ac <- createTdrContext(configFile = getOption("inndxrs.config"), svrname = "")
+  servers <- tibble::as_tibble(ac$tdrservers)
+  by_server <- servers %>% dplyr::group_by(servername) %>% dplyr::mutate(serverhead = servername) %>% tidyr::nest()
 
 
   # --- Static HTML --------------------------------------------------------------
@@ -203,13 +205,14 @@ app_global <- function() {
                                                       ),
                                                       shiny::tags$div(class="navbar-custom-menu",
                                                                       shiny::tags$ul(class="nav navbar-nav",
-                                                                                     if (on.website){
+                                                                                     #if (on.website){
                                                                                        shiny::HTML('<li><a href="http://www.seasonal.website"><strong>Workbench</strong></a></li>
                                                                                                    <li><a href="seasonal.html">Introduction</a></li>
                                                                                                    <li style=""><a href="examples.html">Examples</a></li>')
-                                                                                     } else {
-                                                                                       NULL
-                                                                                     },
+                                                                                     #} else {
+                                                                                      # NULL
+                                                                                     #}
+                                                                                      ,
                                                                                      # Exampe Menu
                                                                                      shiny::tags$li(class="dropdown messages-menu",
                                                                                                     shiny::tags$a(href="#", class="dropdown-toggle", `data-toggle`="dropdown",
@@ -222,7 +225,7 @@ app_global <- function() {
                                                                                                                    shiny::tags$li(style="position: relative; overflow: hidden; width: auto; height: 200px;",
                                                                                                                                   shiny::tags$ul(class="menu",
                                                                                                                                                  ###MDT - Load various TDR servers
-                                                                                                                                                 by_server$data %>% map(server_li)
+                                                                                                                                                 by_server$data %>% purrr::map(server_li)
 
                                                                                                                                   )
                                                                                                                    )

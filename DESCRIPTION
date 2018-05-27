@@ -8,13 +8,13 @@ Depends:
     R (>= 3.5.0)
 Imports:
     assertthat,
+    tidyverse,
     DT,
     glue,
     graphics,
     shiny,
     shinydashboard,
     stats,
-    tidyverse,
     here,
     inndxr,
     jsonlite,
@@ -22,7 +22,9 @@ Imports:
     dplyr,
     odbc,
     DBI,
-    magrittr
+    magrittr,
+    tidyr,
+    purrr
 Suggests:
     testthat,
     knitr,

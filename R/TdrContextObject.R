@@ -35,12 +35,14 @@ createTdrContext <- function(configFile, svrname){
     azEnv$port <- server$port
 
     tdrauth <- tdrAuthenticate(azEnv)
+
+    if(tdrauth) {
+
+      tdrGetCompanies(azEnv)
+    }
   }
 
-  if(tdrauth) {
 
-    tdrGetCompanies(azEnv)
-  }
 
   # else {
   #   if (!missing(driver)) azEnv$driver <- driver
