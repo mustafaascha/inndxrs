@@ -14,12 +14,12 @@ library(DT)
 
 if (interactive()){
   ui <- fluidPage(
-    mod_csv_fileInput("fichier"),
+    mod_tdr_companyUI("fichier", label = "Test Label"),
     DTOutput("tableau")
   )
 
   server <- function(input, output, session) {
-    data <- callModule(mod_csv_file,"fichier")
+    data <- callModule(mod_tdr_company,"fichier")
     output$tableau <- renderDT({data()})
   }
 

@@ -17,3 +17,6 @@ If successful, returns TRUE
 \description{
 Switch based on auth types.
 }
+\seealso{
+Other TDR resource functions: \code{\link{obxAuthenticateDB}}
+}

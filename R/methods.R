@@ -47,3 +47,33 @@ assertthat::on_failure(is.tdrActiveContext) <- function(call, env) {
 # on_failure(is_admin_user) <- function(call, env) {
 #   "Provide an adminUser"
 # }
+
+#' @export
+#' @rdname Internal
+as.obxActiveContext <- function(x){
+  if(!is.environment(x)) stop("Expecting an environment as input")
+  class(x) <- "obxActiveContext"
+  x
+}
+
+#' @export
+#' @rdname Internal
+is.obxActiveContext <- function(x){
+  inherits(x, "obxActiveContext")
+}
+
+#' @export
+print.obxActiveContext <- function(x, ...){
+  cat("inndxrs obxActiveContext\n")
+  cat("Obx Company Name :", x$companyname, "\n")
+}
+
+#' @export
+str.obxActiveContext <- function(object, ...){
+  cat(("inndxrs obxActiveContext with elements:\n"))
+  ls.str(object, all.names = TRUE)
+}
+
+assertthat::on_failure(is.obxActiveContext) <- function(call, env) {
+  "Provide a valid obxActiveContext. See createObxContext()"
+}

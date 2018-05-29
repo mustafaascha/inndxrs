@@ -96,16 +96,29 @@ tdrGetCompanies <- function(tdrActiveContext, verbose = FALSE){
   con_tdr <- tdrActiveContext$connection
 
   tdr_Universe <- dplyr::tbl(con_tdr, "vPortfolioSecurityUniverse")
+  tdr_ObelixDatabaseServers <- dplyr::tbl(con_tdr, "ObelixDatabaseServers")
+  tdr_ObelixDatabases <- dplyr::tbl(con_tdr, "ObelixDatabases")
 
   z <- tdr_Universe %>%
     dplyr::filter(
       !is.na(ObelixDatabaseName)
     ) %>%
+    dplyr::inner_join(
+      tdr_ObelixDatabases, by = c("ObelixDatabaseID")
+    ) %>%
+    dplyr::inner_join(
+      tdr_ObelixDatabaseServers, by = c("ObelixDatabaseServerID")
+    ) %>%
     dplyr::select(
       CompanyName,
-      ObelixDatabaseName
+      ObelixDatabaseName.x,
+      ObelixDatabaseServerName,
+      ObelixDatabaseConnectionString
     ) %>%
-    dplyr::distinct()
+    dplyr::distinct() %>%
+    rename(
+      ObelixDatabaseName = ObelixDatabaseName.x
+    )
 
   tdrActiveContext$companies <- z
 

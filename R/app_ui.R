@@ -22,7 +22,8 @@ app_ui <- function() {
                         ),
                         id = "iActiveTerminal",
                         shiny::tabPanel("XXX",
-                                        shiny::uiOutput("oTerminal")
+                                        mod_tdr_companyUI("fichier", label = "Test Label"),
+                                        DT::DTOutput("tableau")
                         ),
                         shiny::tabPanel("YYY",
                                         shiny::uiOutput("oTerminalX13")

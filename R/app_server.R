@@ -18,6 +18,10 @@ app_server <- function(input, output, session) {
   ac <- inndxrs:::createTdrContext(configFile = getOption("inndxrs.config"), svrname = "")
   servers <- tibble::as_tibble(ac$tdrservers)
 
+
+  data <- callModule(mod_tdr_company,"fichier")
+  output$tableau <- DT::renderDT({data()})
+
   # rUplMsg <- reactiveValues(upd = 0)
   # rError <- reactiveValues(msg = "")
   # rServer <- reactiveValues(servername = "")
