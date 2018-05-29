@@ -3,11 +3,17 @@
 \name{as.tdrActiveContext}
 \alias{as.tdrActiveContext}
 \alias{is.tdrActiveContext}
+\alias{as.obxActiveContext}
+\alias{is.obxActiveContext}
 \title{tdrActiveContext object.}
 \usage{
 as.tdrActiveContext(x)
 
 is.tdrActiveContext(x)
+
+as.obxActiveContext(x)
+
+is.obxActiveContext(x)
 }
 \arguments{
 \item{x}{Object to create, test or print}
