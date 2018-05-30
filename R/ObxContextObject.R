@@ -25,7 +25,7 @@ createObxContext <- function(tdrActiveContext, cpyname){
       obxdbs <- companies %>% dplyr::filter(CompanyName ==  cpyname)
     }
 
-    azEnv$serverurl <- tdrActiveContext$serverurl
+    azEnv$serverurl <- obxdbs$ObelixDatabaseServerName
     azEnv$uid <- tdrActiveContext$uid
     azEnv$pwd <- tdrActiveContext$pwd
     azEnv$driver <- tdrActiveContext$driver
@@ -35,7 +35,7 @@ createObxContext <- function(tdrActiveContext, cpyname){
 
       obxdbs <- obxdbs %>%
         dplyr::mutate(
-          serverurl = tdrActiveContext$serverurl,
+          serverurl = obxdbs$ObelixDatabaseServerName,
           uid = tdrActiveContext$uid,
           pwd = tdrActiveContext$pwd,
           driver = tdrActiveContext$driver,
