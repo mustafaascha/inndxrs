@@ -27,9 +27,21 @@ tdr_copy_table <- function(tablename, con_tdr, numfields) {
     sql_drop <- paste0("DROP TABLE IF EXISTS [dbo].[tmp_", tablename, "]")
     sql_insert <- paste0("INSERT INTO [dbo].[tmp_", tablename, "] SELECT * FROM [dbo].[", tablename, "]")
 
-    DBI::dbSendStatement(conn = con_tdr, statement = sql_drop)
-    DBI::dbSendStatement(conn = con_tdr, statement = sql_create)
-    DBI::dbSendStatement(conn = con_tdr, statement = sql_insert)
+    rs <- DBI::dbSendStatement(conn = con_tdr, statement = sql_drop)
+
+    DBI::dbHasCompleted(rs)
+    DBI::dbGetRowsAffected(rs)
+    DBI::dbClearResult(rs)
+
+    rs <- DBI::dbSendStatement(conn = con_tdr, statement = sql_create)
+    DBI::dbHasCompleted(rs)
+    DBI::dbGetRowsAffected(rs)
+    DBI::dbClearResult(rs)
+
+    rs <- DBI::dbSendStatement(conn = con_tdr, statement = sql_insert)
+    DBI::dbHasCompleted(rs)
+    DBI::dbGetRowsAffected(rs)
+    DBI::dbClearResult(rs)
 
     tablename <- paste0("tmp_", tablename)
 
