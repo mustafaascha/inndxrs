@@ -14,14 +14,35 @@ shiny::runApp('inst/app')
 
 ac <- inndxrs::createTdrContext(configFile = getOption("inndxrs.config"), svrname = "Azure")
 
+con_tdr <- ac$connection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 obx <- inndxrs::createObxContext(tdrActiveContext = ac, cpyname = "Coronation")
 
 xxx <- obx_ih_get(obxActiveContext = obx, obxname = "", ihtype = "Unprocessed")
-
-
-ac <- inndxrs::createTdrContext(configFile = getOption("inndxrs.config"), svrname = "Azure")
-
-con_tdr <- ac$connection
 
 universe <- inndxrs::tdr_universe_get(con_tdr = con_tdr, company_name = "Coronation", portfolio_allocated = FALSE, portfolio_group_name = "")
 

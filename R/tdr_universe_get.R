@@ -24,19 +24,21 @@ tdr_universe_get <- function(con_tdr, company_name = "",
   }
 
   if(portfolio_group_name != "") {
-    tbl_portfolio_groups <- dplyr::tbl(con_tdr, "PortfolioGroups")
-    tbl_portfolio_groups_portfolios <- dplyr::tbl(con_tdr, "PortfolioGroupPortfolios")
+    # tbl_portfolio_groups <- dplyr::tbl(con_tdr, "PortfolioGroups")
+    # tbl_portfolio_groups_portfolios <- dplyr::tbl(con_tdr, "PortfolioGroupPortfolios")
+    #
+    # tbl_portfolio_ids <- tbl_portfolio_groups %>%
+    #   dplyr::filter(
+    #     PortfolioGroupName == portfolio_group_name
+    #   ) %>%
+    #   dplyr::inner_join(
+    #     tbl_portfolio_groups_portfolios, by = c("PortfolioGroupID")
+    #   ) %>%
+    #   dplyr::select(
+    #     PortfolioID
+    #   )
 
-    tbl_portfolio_ids <- tbl_portfolio_groups %>%
-      dplyr::filter(
-        PortfolioGroupName == portfolio_group_name
-      ) %>%
-      dplyr::inner_join(
-        tbl_portfolio_groups_portfolios, by = c("PortfolioGroupID")
-      ) %>%
-      dplyr::select(
-        PortfolioID
-      )
+    tbl_portfolio_ids <- tdr_portfoliogroup_ids(con_tdr, portfolio_group_name)
 
     tbl_universe <- tbl_universe %>%
       dplyr::semi_join(
@@ -133,5 +135,25 @@ tdr_company_unique_groups <- function(con_tdr, company_name = "") {
     )
 
   return(company_unique_groups)
+
+}
+
+tdr_portfoliogroup_ids <- function(con_tdr, portfolio_group_name) {
+
+  tbl_portfolio_groups <- dplyr::tbl(con_tdr, "PortfolioGroups")
+  tbl_portfolio_groups_portfolios <- dplyr::tbl(con_tdr, "PortfolioGroupPortfolios")
+
+  tbl_portfolio_ids <- tbl_portfolio_groups %>%
+    dplyr::filter(
+      PortfolioGroupName == portfolio_group_name
+    ) %>%
+    dplyr::inner_join(
+      tbl_portfolio_groups_portfolios, by = c("PortfolioGroupID")
+    ) %>%
+    dplyr::select(
+      PortfolioID
+    )
+
+  return(tbl_portfolio_ids)
 
 }
