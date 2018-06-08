@@ -26,3 +26,29 @@ date_int <- function(date){
   return(ret)
 
 }
+
+
+reorder_cols <- function(df) {
+
+  col_names <- colnames(df)
+
+  key_names <- c("portfoliocode",
+                 "instrumentcode",
+                 "SecurityClassName",
+                 "SecurityType",
+                 "SecuritySubType",
+                 "ObelixDatabaseName",
+                 "CompanyID",
+                 "HiportDBID", "date_int")
+
+
+  other_names <- col_names[!col_names %in% key_names]
+
+  df <- df %>%
+    select(
+      key_names, other_names
+    )
+
+  return(df)
+
+}

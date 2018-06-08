@@ -23,6 +23,67 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
       universe, by = c("portfoliocode", "instrumentcode", "CompanyID", "HiportDBID")
     )
 
+  tbl_income <- tbl_income %>%
+    mutate(
+      effectivedate_int = sql("dbo.fn_DateTime2Obelix(EffectiveDate)")
+    )
+
+  tbl_income <- tbl_income %>%
+    mutate(
+      date_int = effectivedate_int
+    )
+
+
+  tbl_income <- tbl_income %>%
+    select(
+      -PortfolioName,
+      -AssetManagerCode,
+      -AssetManagerName,
+      -ReportEndDate,
+      -ReportRunDate,
+      -ReportRunTime,
+      -ReportStartDate,
+      -ClosingBalance_MAX,
+      -ClosingBalance_MIN,
+      -DividendIncomeEarned_MAX,
+      -DividendIncomeEarned_MIN,
+      -WithholdingTax_MAX,
+      -WithholdingTax_MIN,
+      -PrevClosingBalance_MAX,
+      -PrevClosingBalance_MIN,
+      -OpeningBalance_MAX,
+      -OpeningBalance_MIN,
+      -InterestIncomeEarned_MAX,
+      -InterestIncomeEarned_MIN,
+      -InterestIncomePaid_MAX,
+      -InterestIncomePaid_MIN,
+      -DividendIncomePaid_MAX,
+      -DividendIncomePaid_MIN,
+      -Id
+    )
+
+  # col_names <- names(tbl_income)
+  #
+  # key_names <- c("portfoliocode",
+  #                "instrumentcode",
+  #                "SecurityClassName",
+  #                "SecurityType",
+  #                "SecuritySubType",
+  #                "ObelixDatabaseName",
+  #                "CompanyID",
+  #                "HiportDBID", "date_int")
+  #
+  #
+  # other_names <- col_names[!col_names %in% key_names]
+  #
+  # tbl_income <- tbl_income %>%
+  #   select(
+  #     key_names, other_names
+  #   )
+
+  tbl_income <- reorder_cols(tbl_income)
+
+
   return(tbl_income)
 
 }

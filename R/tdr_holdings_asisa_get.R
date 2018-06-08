@@ -23,13 +23,69 @@ tdr_holdings_asisa_get <- function(con_tdr, universe, holdings_date) {
       universe, by = c("portfoliocode", "instrumentcode", "CompanyID" = "CompanyID", "HiportDBID" = "HiportDBID")
     )
 
+  tbl_holdings <- tbl_holdings %>%
+    mutate(
+      date_int = sql("dbo.fn_DateTime2Obelix(ValuationDate)")
+    )
+
   if(!missing(holdings_date)){
 
     tbl_holdings <- tbl_holdings %>%
       filter(
-        ValuationDate == holdings_date
+        date_int == holdings_date
       )
   }
+
+  tbl_holdings <- tbl_holdings %>%
+    rename(
+      nom = HoldingNominal,
+
+      aai = AssetAccruedIncome,
+      abv = AssetBookValue,
+      aee = AssetEffectiveExposure,
+      amv = AssetMarketValue,
+      amvc = AssetMarketValueClean,
+      aupl = AssetUnrealisedProfitLoss,
+      aubs = AssetUnsettledBoughtSoldIncome,
+
+      bai = BaseAccruedIncome,
+      bbv = BaseBookValue,
+      bee = BaseEffectiveExposure,
+      bmv = BaseMarketValue,
+      bmvc = BaseMarketValueClean,
+      bupl = BaseUnrealisedProfitLoss,
+      bubs = BaseUnsettledBoughtSoldIncome
+
+    )
+
+  cols_remove <- c("ValuationDate",
+                   "ValuationTime",
+                   "ReportRunDate",
+                   "ReportRunTime",
+                   "PortfolioAssetCurrency",
+                   "PortfolioReportingCurrency",
+                   "TotalBookValue",
+                   "TotalMarketValue",
+                   "AppreciationDepreciationFuture",
+                   "AssetAccruedExpenses",
+                   "AssetAverageCost",
+                   "AssetMarketPrice",
+                   "AssetMarketPriceClean",
+                   "AssetMarketPriceAllIn",
+                   "BaseAccruedExpenses",
+                   "BaseAverageCost",
+                   "BaseMarketPriceCum",
+                   "BaseMarketPriceClean",
+                   "BaseMarketPriceAllIn",
+                   "BaseMarketYield")
+
+
+  tbl_holdings <- tbl_holdings %>%
+    select(
+      -cols_remove
+    )
+
+  tbl_holdings <- reorder_cols(tbl_holdings)
 
   return(tbl_holdings)
 

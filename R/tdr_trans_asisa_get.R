@@ -50,6 +50,22 @@ tdr_trans_asisa_get <- function(con_tdr, universe) {
     left_join(
       tbl_trans_mappings, by = c("TransactionCode" = "SourceType", "TransactionSubType" = "SourceSubType", "SecurityType" = "SecurityType", "SecuritySubType" = "SecuritySubType", "OpenCloseIndicator" = "OpenCloseIndicator")
     )
+
+  tbl_transactions <- tbl_transactions %>%
+    mutate(
+      effectivedate_int = sql("dbo.fn_DateTime2Obelix(EffectiveDate)"),
+      entrydate_int = sql("dbo.fn_DateTime2Obelix(EntryDate)"),
+      tradedate_int = sql("dbo.fn_DateTime2Obelix(TradeDate)"),
+      settlementdate_int = sql("dbo.fn_DateTime2Obelix(SettlementDate)")
+    )
+
+  tbl_transactions <- tbl_transactions %>%
+    mutate(
+      date_int = settlementdate_int
+    )
+
+  tbl_transactions <- reorder_cols(tbl_transactions)
+
   return(tbl_transactions)
 
 }
