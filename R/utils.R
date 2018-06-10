@@ -18,7 +18,7 @@ filter_loudly <- function(x, ...){
 #'
 #' @return date in integer
 #' @export
-date_int <- function(date){
+datetoint <- function(date){
   ret <- lubridate::year(date)*10000 + lubridate::month(date)*100 + lubridate::day(date)
 
   ret <- as.integer(ret)
@@ -51,4 +51,18 @@ reorder_cols <- function(df) {
 
   return(df)
 
+}
+
+key_names <- function() {
+
+  key_names <- c("portfoliocode",
+                 "instrumentcode",
+                 "SecurityClassName",
+                 "SecurityType",
+                 "SecuritySubType",
+                 "ObelixDatabaseName",
+                 "CompanyID",
+                 "HiportDBID", "date_int")
+
+  return(key_names)
 }

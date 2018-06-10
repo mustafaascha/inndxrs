@@ -33,6 +33,10 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
       date_int = effectivedate_int
     )
 
+  tbl_income <- tbl_income %>%
+    filter(
+      Duplicated == 0
+    )
 
   tbl_income <- tbl_income %>%
     select(
@@ -82,6 +86,35 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
   #   )
 
   tbl_income <- reorder_cols(tbl_income)
+
+  tbl_income <- tbl_income %>%
+    rename(
+      cb = ClosingBalance,
+      pcb = PrevClosingBalance,
+      ob = OpeningBalance,
+      ie = InterestIncomeEarned,
+      ip = InterestIncomePaid,
+      r = Rate
+    ) %>%
+    distinct()
+
+
+  tbl_income <- tbl_income %>%
+    filter(
+      CurrencyTo == ReportCurrency
+    )
+
+  tbl_income <- tbl_income %>%
+    mutate(
+      cb = cb*r
+      , pcb = pcb*r
+      , ob = ob*r
+      , WithholdingTax = 	WithholdingTax*r
+      , DividendIncomeEarned = DividendIncomeEarned*r
+      , DividendIncomePaid = DividendIncomePaid*r
+      , ie = ie*r
+      , ip = ip*r
+    )
 
 
   return(tbl_income)

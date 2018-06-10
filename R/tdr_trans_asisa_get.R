@@ -66,6 +66,29 @@ tdr_trans_asisa_get <- function(con_tdr, universe) {
 
   tbl_transactions <- reorder_cols(tbl_transactions)
 
+  tbl_transactions <- tbl_transactions %>%
+    mutate(
+      date_int = if_else(SecurityClassName == "Bonds", settlementdate_int, effectivedate_int)
+      , Deleted = sql("ISNULL(Deleted, 0)")     #if_else(!is.na(Deleted), 0, Deleted)
+      , Quantity = if_else(FlipUnitSign, -1*Quantity, Quantity)
+      #
+      , AssetAllInConsideration = if_else(FlipCostSign, -1* AssetAllInConsideration,  AssetAllInConsideration)
+      , BaseAllInConsideration = if_else(FlipCostSign, -1* BaseAllInConsideration,  BaseAllInConsideration)
+      #
+      , asset_cost = if_else(IsPurchase == 1, AssetAllInConsideration, 0)
+      , asset_proceeds = if_else(IsSale == 1, AssetAllInConsideration, 0)
+      #
+      , base_cost = if_else(IsPurchase == 1, BaseAllInConsideration, 0)
+      , base_proceeds = if_else(IsSale == 1, BaseAllInConsideration, 0)
+      #
+      , asset_icome_p = if_else(IsPurchase == 1,  AssetIncome, 0)
+      , asset_icome_s = if_else(IsSale == 1,  AssetIncome, 0)
+      #
+      , base_icome_p = if_else(IsPurchase == 1,  BaseIncome, 0)
+      , base_icome_s = if_else(IsSale == 1,  BaseIncome, 0)
+    )
+
+
   return(tbl_transactions)
 
 }

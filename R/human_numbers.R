@@ -24,6 +24,8 @@ require(scales)
 #' ggplot2 + scale_y_continuous(labels = human_numbers)
 #' ggplot2 + scale_x_continuous(labels = human_numbers)
 #' ggplot2 + scale_x_continuous(labels = human_gbp)
+#' @export
+#'
 
 human_numbers <- function(x = NULL, smbl ="", signif = 1){
   humanity <- function(y){
