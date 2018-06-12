@@ -7,6 +7,23 @@ tdr_positions24j_get <- function(con_tdr, universe) {
 
   tbl_positions24j <- dplyr::tbl(con_tdr, "PositionsS24J")
 
+  tbl_positions24j <- tbl_positions24j %>%
+    mutate(
+      date_int = EndDate
+    )
+
+  tbl_positions24j <- tbl_positions24j %>%
+    rename(
+    oai  = OpeningAccruedInterest,
+    ib = IncomeBought,
+    is = IncomeSold,
+    pa = ProceedsAdjustment,
+    ei = EntitlementIncome,
+    cai = ClosingAccruedInterest,
+    ie = IncomeEarned,
+    cp = CouponIncludingAdjustments
+    )
+
 
   universe <- universe %>%
     select(
@@ -18,10 +35,7 @@ tdr_positions24j_get <- function(con_tdr, universe) {
       universe, by = c("PositionID")
     )
 
-  tbl_positions24j <- tbl_positions24j %>%
-    mutate(
-      date_int = EndDate
-    )
+
 
   tbl_positions24j <- reorder_cols(tbl_positions24j)
 
@@ -38,6 +52,28 @@ tdr_s24j_reasonability_get <- function(con_tdr, universe) {
 
   tbl_s24j <- dplyr::tbl(con_tdr, "ObelixS24JReasonability_Report")
   tbl_rr <- tbl(con_tdr, "ObelixDailyReportRuns")
+
+
+
+
+  tbl_s24j <- tbl_s24j %>%
+    rename(
+      obc = ObelixCoupon,
+      obccp = CouponCapitalPortion,
+      hpc = HiportCoupon,
+      cd = CouponDiffPrev,
+      obs24j = ObelixS24J,
+      obss4a = ObelixSS4A,
+      obint = ObelixInterest,
+      hpint = HiportInterest,
+      s24jadjpre = S24JAdjustPrev,
+      pbss4apre = ObelixSS4APrev,
+      s24jmovepre = S24JAdjustMovePrev,
+      obss4amove = ObelixSS4AMove,
+      obs24i = ObelixS24I,
+      sunits = TotalSaleUnitsToDate,
+      obunits = ObelixUnrealisedUnits
+    )
 
   universe <- tdr_universe %>%
     select(
@@ -56,7 +92,6 @@ tdr_s24j_reasonability_get <- function(con_tdr, universe) {
     inner_join(
       tbl_rr, by = c("ObelixDailyReportRunID", "PortfolioGroupID")
     )
-
 
   tbl_s24j <- tbl_s24j %>%
     mutate(
@@ -83,7 +118,9 @@ tdr_s24j_reasonability_get <- function(con_tdr, universe) {
       -S24JMoveComment,
       -S24JMoveReason,
       -S24JReason,
-      -S24JReportID
+      -S24JReportID,
+      -CouponTimingDate,
+      -CouponReason
 
     )
 

@@ -8,38 +8,21 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
   tbl_income <- dplyr::tbl(con_tdr, "arc_asisa_Income_Converted")
 
   tbl_income <- tbl_income %>%
-    rename(
-      portfoliocode = PortfolioIDCode,
-      instrumentcode = InstrumentCode
-    )
-
-  universe <- universe %>%
-    select(
-      portfoliocode, instrumentcode, CompanyID, HiportDBID, SecurityType, SecuritySubType, SecurityClassName, ObelixDatabaseName
-    )
-
-  tbl_income <- tbl_income %>%
-    inner_join(
-      universe, by = c("portfoliocode", "instrumentcode", "CompanyID", "HiportDBID")
-    )
-
-  tbl_income <- tbl_income %>%
-    mutate(
-      effectivedate_int = sql("dbo.fn_DateTime2Obelix(EffectiveDate)")
-    )
-
-  tbl_income <- tbl_income %>%
-    mutate(
-      date_int = effectivedate_int
-    )
-
-  tbl_income <- tbl_income %>%
     filter(
+      CurrencyTo == ReportCurrency,
       Duplicated == 0
     )
 
+  # tbl_income <- tbl_income %>%
+  #   rename(
+  #     portfoliocode = PortfolioIDCode,
+  #     instrumentcode = InstrumentCode
+  #   )
+
   tbl_income <- tbl_income %>%
     select(
+      -PortfolioIDCode,
+      -InstrumentCode,
       -PortfolioName,
       -AssetManagerCode,
       -AssetManagerName,
@@ -65,6 +48,32 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
       -DividendIncomePaid_MIN,
       -Id
     )
+
+  tbl_income <- tbl_income %>%
+    mutate(
+      effectivedate_int = sql("dbo.fn_DateTime2Obelix(EffectiveDate)")
+    )
+
+  tbl_income <- tbl_income %>%
+    mutate(
+      date_int = effectivedate_int
+    )
+
+
+
+  universe <- universe %>%
+    select(
+      portfoliocode, instrumentcode, CompanyID, HiportDBID, SecurityType, SecuritySubType, SecurityClassName, ObelixDatabaseName, PortfolioID, SecurityID
+    )
+
+  tbl_income <- tbl_income %>%
+    inner_join(
+      universe, by = c("PortfolioID", "SecurityID", "CompanyID", "HiportDBID")
+    )
+
+
+
+
 
   # col_names <- names(tbl_income)
   #
@@ -95,14 +104,8 @@ tdr_income_asisa_get <- function(con_tdr, universe) {
       ie = InterestIncomeEarned,
       ip = InterestIncomePaid,
       r = Rate
-    ) %>%
-    distinct()
-
-
-  tbl_income <- tbl_income %>%
-    filter(
-      CurrencyTo == ReportCurrency
     )
+
 
   tbl_income <- tbl_income %>%
     mutate(
